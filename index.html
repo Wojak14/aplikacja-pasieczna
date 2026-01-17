@@ -1009,26 +1009,5 @@ window.addEventListener("load", ()=>{
 });
 </script>
 
-<script>
-// === AUTOMATYCZNA AKTUALIZACJA PWA ===
-if ('serviceWorker' in navigator) {
-  // Pobierz wszystkie zarejestrowane SW
-  navigator.serviceWorker.getRegistrations().then(registrations => {
-    if(registrations.length > 0){
-      console.log("Znaleziono stare SW, usuwam...");
-    }
-    for (let reg of registrations) {
-      reg.unregister().then(() => {
-        console.log("Stary SW wyrejestrowany:", reg);
-      });
-    }
-  }).finally(() => {
-    // Odświeżenie strony po wyrejestrowaniu SW
-    console.log("Odświeżam stronę, aby pobrać najnowszą wersję...");
-    window.location.reload(true); // true = wymusza pobranie z serwera
-  });
-}
-</script>
-
 </body>
 </html>

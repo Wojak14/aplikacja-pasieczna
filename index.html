@@ -948,8 +948,14 @@ function showSwarmInfo(day) {
 – Kontrolować temperaturę i wilgotność w komórkach matecznych
 
 <h2>🗒️ Notatki pasieczne</h2>
-<textarea id="notes" placeholder="Wpisz notatki..."></textarea><br>
-<button onclick="saveNotes()">💾 Zapisz</button>
+
+<textarea
+  id="apiary-notes"
+  placeholder="Wpisz notatki z pasieki..."
+  rows="6"
+></textarea>
+
+<p id="autosave-status" style="font-size:14px;color:green;"></p>
 
 <h2>📊 Statystyki</h2>
 <ul>
@@ -992,6 +998,33 @@ if('serviceWorker' in navigator){
     window.location.reload(true);
   });
 }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const textarea = document.getElementById("apiary-notes");
+  const status = document.getElementById("autosave-status");
+  const STORAGE_KEY = "apiary-notes-2026";
+
+  // 🔹 wczytaj zapisane notatki
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) textarea.value = saved;
+
+  let saveTimer = null;
+
+  // 🔹 automatyczny zapis po pisaniu
+  textarea.addEventListener("input", () => {
+    status.textContent = "💾 zapisywanie...";
+    clearTimeout(saveTimer);
+
+    saveTimer = setTimeout(() => {
+      localStorage.setItem(STORAGE_KEY, textarea.value);
+      status.textContent = "✅ zapisano automatycznie";
+    }, 800); // zapis po 0,8 s bez pisania
+  });
+
+});
 </script>
 
 </body>

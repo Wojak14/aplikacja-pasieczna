@@ -42,14 +42,64 @@ th, td {
 .red { background: #F44336; color: white; }
 .black { background: #000; color: white; }
 
-.day-number {
-  font-weight: bold;
+.legend {
+front-size: 14px;
+margin: 15px 0;
+padding: 10px;
+border: 1px solid #ccc;
+background: #fafafa;
+font-size: 14px;
+
 }
 
- .note-marker {
-  color: red;
-  font-size: 14px;
-  margin-left: 6px;
+.legend-header {
+padding: 8px;
+front-weight: bold;
+cursor: pointer;
+
+.day-number {
+  font-weight: bold;
+font-size: 14px;
+position: relative;
+background: #f0f0f0;
+
+}
+
+.legent-content {
+padding: 8px;
+display: none;
+
+}
+
+.legend.open .legend-content {
+display: block;
+
+}
+
+/* 📌 znacznik daty z notatki */
+ .day-marker {
+  display: inline-block;
+  font-size: 15px;
+  margin-left: 4px;
+}
+
+/* 🍯 🐝 👑 ikony z treści notatki */
+.note-icon {
+display: inline-block;
+font-size: 15px;
+margin-left: 2px;
+
+}
+
+/* mobile */
+@media (max-width: 600px) {
+table, th, td {
+.day-marker,
+.note-icon {
+front-size: 16px;
+
+  }
+
 }
 
 .notes {
@@ -1202,12 +1252,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script>
 if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js")
       .then(() => console.log("✅ Service Worker OK"))
       .catch(err => console.log("❌ SW error", err));
+  });
 }
 </script>
 
+</script>
+document.addEventListener("DOMContentLoaded", () => {
+const header = document.querySelector(".legend-header");
+const legend = document.querySelector(".legend");
+header.addEventListener("click", () => {
+legend.classList.toggle("open");
+});
+});
+</script>
+
+<div class="legend">
+<strong>Legenda:</strong><br>
+📌 - notatka<br>
+🍯 - miodobranie<br>
+🐝 - prace pasieczne<br>
+👑 - matka / wychów matek<br>
+</div>
 
 </body>
 </html>

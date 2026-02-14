@@ -83,12 +83,13 @@ display: block;
   margin-left: 4px;
 }
 
-/* 🍯 🐝 👑 ikony z treści notatki */
+/* 📌 🍯 🐝 👑 ikony z treści notatki */
 .note-icon {
 display: inline-block;
-font-size: 15px;
-margin-left: 2px;
-
+position:absolute;
+bottom:2px
+right:2px
+font-size: 12px;
 }
 
 /* mobile */
@@ -1196,6 +1197,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 800);
   });
 
+function getNoteIcon(text){
+const t = text.toLowerCase();
+if(t.includes("miodobranie")) return "🍯";
+if(t.includes("przegląd") || t.includes("pasiek")) retrun "📌"
+if(t.includes("prace")) retrun "🐝"
+if(t.includes("matka") || t.includes("wychów") || t.includes("matecznik)) return "👑";
+return "";
+}
+
   function updateMarkers() {
 
     // usuń stare znaczniki
@@ -1236,7 +1246,13 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!td.querySelector(".note-marker")) {
             const marker = document.createElement("span");
             marker.className = "note-marker";
-            marker.textContent = "📝";
+            marker.textContent = "📌";
+            const icon = getNoteIcon(noteLine);
+            if(icon){
+            const iconE1 = document.createElement("span");
+            iconE1.className = "note-icon";
+            iconE1.textContent = icon;
+            day.appendChild(iconE1);
             span.after(marker);
           }
         }
@@ -1267,7 +1283,7 @@ if ("serviceWorker" in navigator) {
 📌 - notatka<br>
 🍯 - miodobranie<br>
 🐝 - prace pasieczne<br>
-👑 - matka / wychów matek<br>
+👑 - matka / wychów matek / matecznik<br>
 </div>
 </div>
 

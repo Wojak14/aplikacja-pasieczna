@@ -1261,12 +1261,27 @@ if ("serviceWorker" in navigator) {
 </script>
 
 <div class="legend">
+<div class="legend-header">📘Legenda (kliknij)</div>
+<div class="legent-content">
 <strong>Legenda:</strong><br>
 📌 - notatka<br>
 🍯 - miodobranie<br>
 🐝 - prace pasieczne<br>
 👑 - matka / wychów matek<br>
 </div>
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoadet", () => {
+const header = document.querySelector(".legend-header")
+const legend = document.querySelector(".legend"); if (!header || !legend) retrum;
+header.addEventListener("click", () => {
+legend.classList.toggle("open"); 
+});
+});
+<script>
+
 
 </body>
 </html>

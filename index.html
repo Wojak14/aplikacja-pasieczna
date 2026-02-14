@@ -1197,15 +1197,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 800);
   });
 
-function getNoteIcon(text){
-const t = text.toLowerCase();
-if(t.includes("miodobranie")) return "🍯";
-if(t.includes("przegląd") || t.includes("pasiek")) retrun "📌"
-if(t.includes("prace")) retrun "🐝"
-if(t.includes("matka") || t.includes("wychów") || t.includes("matecznik)) return "👑";
-return "";
-}
-
   function updateMarkers() {
 
     // usuń stare znaczniki
@@ -1247,12 +1238,6 @@ return "";
             const marker = document.createElement("span");
             marker.className = "note-marker";
             marker.textContent = "📌";
-            const icon = getNoteIcon(noteLine);
-            if(icon){
-            const iconE1 = document.createElement("span");
-            iconE1.className = "note-icon";
-            iconE1.textContent = icon;
-            day.appendChild(iconE1);
             span.after(marker);
           }
         }

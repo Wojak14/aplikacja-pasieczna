@@ -76,7 +76,7 @@ display: block;
 
 }
 
-/* 📌 znacznik daty z notatki */
+/* 📘 znacznik daty z notatki */
  .day-marker {
   display: inline-block;
   font-size: 15px;
@@ -118,6 +118,17 @@ front-size: 16px;
   table, th, td { font-size: 12px; }
   .notes { height: 60px; }
 }
+
+.has-note{
+background:#FFF3CD !important;
+font-weight:bold;
+}
+#upcoming-box{
+background:#fff8e1;
+padding:10px;
+border-radius:10px;
+margin-bottom:15px;
+}
 </style>
 </head>
 
@@ -127,6 +138,10 @@ front-size: 16px;
 <legend>🟩 Prace pasieczne | 🟨 Miodobranie | 🟧 Dni rojowe | 🔴 Przymrozki | ⬛ Zimowla</legend>
 
 <h2>Kalendarz pszczelarski 2026</h2>
+
+<div id="upcoming-box">
+<h2>Najbliższe prace w pasiece</h2>
+<ul id="upcoming-list"></ul></div>
 
 <!-- STYCZEŃ 2026 -->
 <div class="month">
@@ -1167,7 +1182,7 @@ front-size: 16px;
 – Zachować higienę w ulu i narzędziach<br>
 – Kontrolować temperaturę i wilgotność w komórkach matecznych
 
-<h3>📝 Notatki pasieczne</h3>
+<h3>📘 Notatki pasieczne</h3>
 
 <textarea id="apiary-notes" class="notes"
 placeholder="Np. 24.01.2026 przegląd pasieki"></textarea>
@@ -1176,12 +1191,9 @@ placeholder="Np. 24.01.2026 przegląd pasieki"></textarea>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const textarea = document.getElementById("apiary-notes");
-  const status = document.getElementById("autosave-status");
-  const STORAGE_KEY = "apiary-notes-2026";
-
-  if (localStorage.getItem(STORAGE_KEY)) {
-    textarea.value = localStorage.getItem(STORAGE_KEY);
+  const textarea = document.querySelector("textarea");
+  if(!textarea) return;
+  textarea.value = localStorage.getItem("notes2026") || "";
   }
 
   let timer = null;
@@ -1191,26 +1203,64 @@ document.addEventListener("DOMContentLoaded", () => {
     clearTimeout(timer);
 
     timer = setTimeout(() => {
-      localStorage.setItem(STORAGE_KEY, textarea.value);
+      localStorage.setItem("notes2026", textarea.value);
       status.textContent = "✅ zapisano automatycznie";
-      updateMarkers();
+      processNotes();
     }, 800);
   });
+
+function iconsFromText(text){
+text=text.toLowerCase();
+let icons=[];
+if(text.includes("miod")) icons.push("🍯");
+if(text.includes("przegl") || text.includes("prace") || text.includes("pasiek")) icons.push("🐝");
+if(text.includes("matk") || text.includes("wych") || text.includes("matecz")) icons.push("👑");
+if(icons.length===0) icons.push("📘");
+}
 
   function updateMarkers() {
 
     // usuń stare znaczniki
-    document.querySelectorAll(".note-marker").forEach(m => m.remove());
+    document.querySelectorAll(".day-number").forEach(el=>{;
+    el.textContent = el.textContent.replace(/[📘🍯🐝👑]/g,"").trim();
+    el.closest("td")?.classList.remove("has-note");
+    });
+    document.getElementById("upcoming-list").innerHTML="";    
+    }
 
-    const notes = textarea.value;
-    const regex = /(\d{2})\.(\d{2})\.2026/g;
-    let match;
+function processNotes(){
 
-    while ((match = regex.exec(notes)) !== null) {
-      const day = match[1];
-      const month = parseInt(match[2], 10);
+clearAll();
 
-      markDay(day, month);
+const today = new Date();
+const notes = textarea.value.split("\n");
+
+notes.forEach(line => {
+
+    const m=line.match(/(\d{2})\.(\d{2})\.2026/);
+    if(!m) return;
+      const d=parseInt(m[1]);
+      const mo=parseInt(m[2]);
+
+const tables=document.querySelectorAll("table");
+if(mo>tables.length) return;
+
+const table=tables[mo-1];
+if(!table) return;
+
+const icons=iconsFromText(line);
+
+table.querySelectorAll(".day-number").forEach(span=>{
+if(parseInt(span.textContent)===d){
+icons.forEach(i=> span.texContent += " "+i);
+span.closest("td")?.classList.add("has-note");
+
+consteventDate=new Date(2026, mo-1, d);
+if(eventDate>=today){
+
+const li-document.createElement("li");
+li.textContent = '${d}.${mo}.2026 - ${line.replace(/(\d{2})\.(\d{2})\.2026/, "").trim()}';
+document.getElementById("upcoming-list").appendChild(li);
     }
   }
 
@@ -1237,8 +1287,48 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!td.querySelector(".note-marker")) {
             const marker = document.createElement("span");
             marker.className = "note-marker";
-            marker.textContent = "📌";
+            marker.textContent = "📘";
             span.after(marker);
+
+const searchInput = document.getElementById("note-search");
+
+if(searchInput){
+searchInput.addEventListener("input", ()=>{
+cost q = searchInput.value.toLowerCase();
+document.querySelectorAll("upcoming-list li").forEach(li=>{
+li.classList.toggle("search-hit", li.textContent.toLowerCase().inludes(q));
+  });
+    });
+  }
+
+function showAlerts(){
+
+const today=new date();
+const tomorrow=new Date();
+tomorrow.setDate(today.getDate()+1);
+
+const box=document.getElementById("upcoming-box");
+if(!box) return;
+
+let alertHTML="";
+
+document.querySelectorAll("#upcoming-list li"0.forEach(li=>{
+
+const m=li.textContent.match(/(\d=)\.(\d+)\.2026/);
+if(!m) return;
+
+const d=parseInt(m[1]);
+const mo=parseInt(m[2])
+
+const date=new Date(2026,mo-1,d);
+
+if(date.toDateString()===today.toDateString()){
+alertHTML +='<div class="today-alert">DZIŚ: ${li.textContent}</div>';
+}
+});
+
+if(alertHTML){
+box.insertAdjacentHTML("afterbegin", alertHTML);
           }
         }
       });
@@ -1246,8 +1336,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // inicjalne oznaczenie po starcie
-  updateMarkers();
-
+  processNotes();
+  showAlerts();
 });
 </script>
 
